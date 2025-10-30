@@ -18,9 +18,16 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("My Game")
 clock = pygame.time.Clock()
 
-sound_c = pygame.mixer.Sound("sound/do.wav")
-
-# В обработке событий добавьте:
+sounds = {
+    'S': pygame.mixer.Sound("sounds/do.wav"),
+    'D': pygame.mixer.Sound("sounds/re.wav"),
+    'F': pygame.mixer.Sound("sounds/mi.wav"),
+    'G': pygame.mixer.Sound("sounds/fa.wav"),
+    'H': pygame.mixer.Sound("sounds/salt.wav"),
+    'J': pygame.mixer.Sound("sounds/la.wav"),
+    'K': pygame.mixer.Sound("sounds/c.wav"),
+    'L': pygame.mixer.Sound("sounds/do2.wav")
+}
 
 # Цикл игры
 running = True
@@ -30,8 +37,22 @@ while running:
 
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_a:  # клавиша A
-                sound_c.play()
+            if event.key == pygame.K_s:  # клавиша A
+                sounds['S'].play()
+            elif event.key == pygame.K_d:
+                sounds['D'].play()
+            elif event.key == pygame.K_f:
+                sounds['F'].play()
+            elif event.key == pygame.K_g:
+                sounds['G'].play()
+            elif event.key == pygame.K_h:
+                sounds['H'].play()
+            elif event.key == pygame.K_j:
+                sounds['J'].play()
+            elif event.key == pygame.K_k:
+                sounds['K'].play()
+            elif event.key == pygame.K_l:
+                sounds['L'].play()
         if event.type == pygame.QUIT:
             running = False
 
