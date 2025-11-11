@@ -1,8 +1,8 @@
 import pygame
 from Button import ImageButton
 
-WIDTH = 700
-HEIGHT = 400
+WIDTH = 900
+HEIGHT = 800
 FPS = 30
 
 LIGHT_PINK_2 = (255, 150, 170)
@@ -16,7 +16,7 @@ pygame.init()
 pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=512)
 pygame.mixer.set_num_channels(16)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Мое пианино - Режим:  1")
+pygame.display.set_caption("MY PIANO - MODE:  1")
 clock = pygame.time.Clock()
 
 sound_modes = {
@@ -71,13 +71,13 @@ while running:
         elif mode_button.handle_event(event):
             current_mode = "2" if current_mode == "1" else "3" if current_mode == "2" else "1"
             current_sounds = sound_modes[current_mode]
-            pygame.display.set_caption(f"Мое пианино - Режим: {current_mode}")
+            pygame.display.set_caption(f"MY PIANO - MODE: {current_mode}")
         elif event.type == pygame.KEYDOWN:
             match event.key:
                 case pygame.K_TAB:
                     current_mode = "2" if current_mode == "1" else "3" if current_mode == "2" else "1"
                     current_sounds = sound_modes[current_mode]
-                    pygame.display.set_caption(f"Мое пианино - Режим: {current_mode}")
+                    pygame.display.set_caption(f"MY PIANO - MODE: {current_mode}")
 
                 case pygame.K_s:
                     current_sounds['S'].play()
