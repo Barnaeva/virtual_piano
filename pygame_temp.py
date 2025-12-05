@@ -1,5 +1,5 @@
 import pygame
-from Button import ImageButton
+from virtual_piano.ui.buttons import ImageButton
 
 WIDTH = 900
 HEIGHT = 800

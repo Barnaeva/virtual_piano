@@ -1,4 +1,5 @@
 import pygame
+from config import SIZE_TEXT, FONT
 
 
 class ImageButton:
@@ -26,7 +27,7 @@ class ImageButton:
         pygame.draw.rect(screen, (255, 255, 255), self.rect, 2, border_radius=12)
 
         # Рисуем текст
-        font = pygame.font.Font(None, 36)
+        font = pygame.font.SysFont(FONT, SIZE_TEXT)
         text_surface = font.render(self.text, True, (255, 255, 255))
         text_rect = text_surface.get_rect(center=self.rect.center)
         screen.blit(text_surface, text_rect)
