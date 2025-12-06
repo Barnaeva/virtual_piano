@@ -91,3 +91,7 @@ MELODY_GUSI=['G', 'F', 'D', 'S', 'H', 'H',
              'D','F','G','D','S','S',
              'G', 'J', 'J', 'G', 'F', 'H', 'H', 'F',
              'D','F','G','D','S','S']
+MELODY_JINGLE_BELLS = ['F', 'F', 'F', 'F', 'F', 'F',
+                       'F', 'H', 'S', 'D', 'F',
+                       'G', 'G', 'G', 'G', 'F', 'F', 'F', 'F',
+                       'D', 'D', 'F', 'D', 'H']

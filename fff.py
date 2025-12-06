@@ -30,6 +30,10 @@ class FallingNotesTest:
                             'G', 'J', 'J', 'G',
                             'F', 'H', 'H', 'F',
                             'D','F','G','D','S','S']
+        self.test_melody_JINGLEBELLS = ['F', 'F', 'F', 'F', 'F', 'F',
+                            'F', 'H', 'S', 'D', 'F',
+                            'G', 'G', 'G', 'G', 'F', 'F', 'F', 'F',
+                            'D', 'D', 'F', 'D', 'H']
         '''Гуси.
 4 3 2 1 5 5
 Жи-ли у ба-бу-си
