@@ -1,4 +1,3 @@
-# scenes/piano.py
 import pygame
 from config import *
 from ui.buttons import ImageButton
@@ -15,7 +14,7 @@ class PianoScene:
         self.key_glow_time = [0] * KEY_COUNT
 
         self.mode_button = ImageButton(
-            MODE_BUTTON_X, MODE_BUTTON_Y, MODE_BUTTON_WIDTH, MODE_BUTTON_HEIGHT, "РЕЖИМ ЗВУКА",
+            MODE_BUTTON_X, MODE_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT, "РЕЖИМ ЗВУКА",
             BACKGROUND, BUTTON, BUTTON_SOUND_PATH
         )
         self.exit_button = ImageButton(
@@ -23,9 +22,10 @@ class PianoScene:
             BACKGROUND, BUTTON,BUTTON_SOUND_PATH
         )
         self.mode_button_game = ImageButton(
-            MODE_GAME_BUTTON_X, MODE_GAME_BUTTON_Y, MODE_GAME_BUTTON_WIDTH, MODE_GAME_BUTTON_HEIGHT, "РЕЖИМ ИГРЫ",
+            MODE_GAME_BUTTON_X, MODE_GAME_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT, "РЕЖИМ ИГРЫ",
             BACKGROUND, BUTTON, BUTTON_SOUND_PATH
         )
+        self.need_switch_to_game = False
 
     def load_sounds(self):
         sound_modes = {}
@@ -56,7 +56,7 @@ class PianoScene:
                 return False
 
             if self.mode_button_game.handle_event(event):
-                print('РЕЖИМ НАХОДИТСЯ В РАЗРАБОТКЕ')
+                self.need_switch_to_game = True
 
 
             elif event.type == pygame.KEYDOWN:
