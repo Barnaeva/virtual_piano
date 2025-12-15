@@ -43,6 +43,7 @@ class PianoScene:
         self.current_mode = "2" if self.current_mode == "1" else "3" if self.current_mode == "2" else "1"
         self.current_sounds = self.sound_modes[self.current_mode]
 
+
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -57,6 +58,7 @@ class PianoScene:
 
             if self.mode_button_game.handle_event(event):
                 self.need_switch_to_game = True
+
 
 
             elif event.type == pygame.KEYDOWN:
@@ -118,9 +120,11 @@ class PianoScene:
         font = pygame.font.SysFont(FONT, SIZE_TEXT)
 
         mode_name = CURRENT_MODE.get(self.current_mode, f"Режим {self.current_mode}")
-        mode_text = font.render(f"Режим: {mode_name} ", True, TEXT)
+        mode_text = font.render(f"Режим звука: {mode_name} ", True, TEXT)
 
         self.screen.blit(mode_text, (MODE_TEXT_X, MODE_TEXT_Y))
+
+
 
         for i, label in enumerate(KEY_LABELS):
             key_x = PIANO_START_X + i * (KEY_WIDTH + KEY_SPACING) + KEY_TEXT_OFFSET_X
@@ -128,7 +132,12 @@ class PianoScene:
 
             key_text = font.render(label, True, BUTTON)
             self.screen.blit(key_text, (key_x, key_y))
+        self.draw_mode_game()
 
+    def draw_mode_game(self):
+        font = pygame.font.SysFont(FONT, SIZE_TEXT)
+        mode_text = font.render(f"Режим игры: СИНТЕЗАТОР ", True, TEXT)
+        self.screen.blit(mode_text, (MODE_TEXT_X, MODE_TEXT_Y + 30))
 
     def run(self):
         self.clock.tick(FPS)

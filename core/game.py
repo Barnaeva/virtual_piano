@@ -14,9 +14,8 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
 
-        # Начинаем с обычного пианино
         self.current_scene = PianoScene(self.screen, self.clock)
-        self.is_game_mode = False  # Флаг игрового режима
+        self.is_game_mode = False
 
     def switch_to_game_mode(self):
         """Переключает на игровой режим"""
