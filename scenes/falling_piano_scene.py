@@ -12,17 +12,17 @@ class FallingPianoScene(PianoScene):
         self.stop_icon = load_icon("stop.png")
 
         self.falling_notes = []
-        self.fall_speed = 5
+        self.fall_speed = FALLING_SPEED
         self.is_playing = False
 
         # Загружаем ВСЕ мелодии
-        self.all_melodies = read_json('mel.json')  # Теперь это список!
+
+        self.all_melodies = read_json('melodies/mel.json')  # Теперь это список!
 
         # Текущий индекс мелодии
         self.current_melody_index = 0
         # Текущая мелодия
         self.current_melody_data = self.all_melodies[self.current_melody_index]
-
         self.current_note_index = 0
         self.melody_start_time = 0
         self.next_note_time = 0
@@ -33,8 +33,8 @@ class FallingPianoScene(PianoScene):
         # Кнопка старт/пауза
         self.start_button = ImageButton(
             x=PIANO_START_X,
-            y=EXIT_BUTTON_Y,
-            width=GAME_BUTTON_WIDTH,
+            y=GAME_BUTTON_Y,
+            width=START_BUTTON_WIDTH,
             height=GAME_BUTTON_HEIGHT,
             text=None, color=BACKGROUND, hover_color=BUTTON,
             sound_path=BUTTON_SOUND_PATH,
@@ -44,8 +44,8 @@ class FallingPianoScene(PianoScene):
 
         # Кнопка сброса
         self.reset_button = ImageButton(
-            x=PIANO_START_X + GAME_BUTTON_WIDTH + KEY_SPACING,
-            y=EXIT_BUTTON_Y,
+            x=PIANO_START_X + START_BUTTON_WIDTH + GAME_BUTTON_SPACING,
+            y=GAME_BUTTON_Y,
             width=GAME_BUTTON_WIDTH,
             height=GAME_BUTTON_HEIGHT,
             text="СБРОС", color=BACKGROUND, hover_color=BUTTON,
@@ -54,8 +54,8 @@ class FallingPianoScene(PianoScene):
 
         # Кнопка переключения мелодии (текст будет обновляться)
         self.mel_button = ImageButton(
-            x=PIANO_START_X + (GAME_BUTTON_WIDTH + KEY_SPACING) * 2,
-            y=EXIT_BUTTON_Y,
+            x=PIANO_START_X + START_BUTTON_WIDTH+GAME_BUTTON_WIDTH + GAME_BUTTON_SPACING * 2,
+            y=GAME_BUTTON_Y,
             width=GAME_BUTTON_WIDTH,
             height=GAME_BUTTON_HEIGHT,
             text=self.current_melody_data['name'],  # Название текущей мелодии
@@ -67,6 +67,7 @@ class FallingPianoScene(PianoScene):
         # Статистика
         self.score = 0
         self.misses = 0
+        self.pause_start_time = 0
 
     def switch_melody(self):
         """Переключает на следующую мелодию по кругу"""
@@ -83,13 +84,13 @@ class FallingPianoScene(PianoScene):
         if self.is_playing:
             self.reset_game()
 
-        print(f"Переключено на: {self.current_melody_data['name']}")
-
     def reset_game(self):
         """Сбрасывает игру с учетом текущей мелодии"""
         self.falling_notes.clear()
         self.current_note_index = 0
         self.melody_start_time = 0
+        self.next_note_time = 0
+        self.pause_start_time = 0
         self.score = 0
         self.misses = 0
         self.is_playing = False
@@ -108,10 +109,10 @@ class FallingPianoScene(PianoScene):
             'note_index': note_index,
             'note_name': note_name,
             'x': PIANO_START_X + note_index * (KEY_WIDTH + KEY_SPACING),
-            'y': 200,
+            'y': FALLING_NOTES_START_Y,
             'width': KEY_WIDTH,
-            'height': 50,
-            'color': BUTTON,
+            'height': FALLING_NOTE_HEIGHT,
+            'color': FALLING_NOTE_COLOR,
             'active': True,
             'hit': False
         }
@@ -154,8 +155,8 @@ class FallingPianoScene(PianoScene):
                 if self.key_glow_time[note['note_index']] > 0:
                     # Попадание!
                     note['hit'] = True
-                    note['color'] = (0, 255, 0)
-                    self.score += 100
+                    note['color'] = FALLING_NOTE_HIT_COLOR
+                    self.score += SCORE_PER_HIT
                     self.falling_notes.remove(note)
 
             # Удаляем упавшие
@@ -168,16 +169,28 @@ class FallingPianoScene(PianoScene):
 
         for event in events:
             if self.start_button.handle_event(event):
-                self.is_playing = not self.is_playing
+                if not self.is_playing:
+                    # ЗАПУСК/ПРОДОЛЖЕНИЕ игры
+                    self.is_playing = True
 
-                if self.is_playing:
                     if self.stop_icon:
                         self.start_button.set_icon(self.stop_icon, (50, 50))
+
                     # При старте сбрасываем таймеры
                     if self.current_note_index == 0:
                         self.melody_start_time = pygame.time.get_ticks()
                         self.next_note_time = self.melody_start_time
+                    else:
+                        # Продолжение после паузы
+                        if self.pause_start_time > 0:
+                            pause_duration = pygame.time.get_ticks() - self.pause_start_time
+                            self.next_note_time += pause_duration
+                            self.pause_start_time = 0
                 else:
+                    # ПАУЗА
+                    self.is_playing = False
+                    self.pause_start_time = pygame.time.get_ticks()  # ЗАПОМИНАЕМ ВРЕМЯ ПАУЗЫ!
+
                     if self.play_icon:
                         self.start_button.set_icon(self.play_icon, (50, 50))
                 continue
@@ -206,15 +219,19 @@ class FallingPianoScene(PianoScene):
         self.mel_button.check_hover(mouse_pos)
 
     def draw_additional(self):
-        pygame.draw.rect(self.screen, (230, 230, 230),
-                         (PIANO_START_X, 210,
+        # Рисуем область для падающих нот
+        pygame.draw.rect(self.screen, NOTES_AREA_COLOR,
+                         (PIANO_START_X, NOTES_AREA_START_Y,
                           KEY_COUNT * (KEY_WIDTH + KEY_SPACING) - 5,
-                          310))
+                          NOTES_AREA_HEIGHT))
+
+        # Разделительные линии между нотами
         for i in range(KEY_COUNT):
             x = (PIANO_START_X - KEY_SPACING) + i * (KEY_WIDTH + KEY_SPACING)
             pygame.draw.rect(self.screen, BACKGROUND,
-                             (x, 210, KEY_SPACING, 310), 0)
+                             (x, NOTES_AREA_START_Y, KEY_SPACING, NOTES_AREA_HEIGHT), 0)
 
+        # Зона попадания
         zone_rect = pygame.Rect(
             PIANO_START_X,
             self.hit_zone_top,
@@ -222,54 +239,58 @@ class FallingPianoScene(PianoScene):
             self.hit_zone_bottom - self.hit_zone_top
         )
 
+        # Полупрозрачная зона попадания
         s = pygame.Surface(zone_rect.size, pygame.SRCALPHA)
-        s.fill((170, 200, 170, 100))
+        s.fill((*HIT_ZONE_COLOR, HIT_ZONE_ALPHA))
         self.screen.blit(s, zone_rect.topleft)
-        pygame.draw.rect(self.screen, (170, 200, 170), zone_rect, 2)
+        pygame.draw.rect(self.screen, HIT_ZONE_BORDER_COLOR, zone_rect, 2)
 
+        # Рисуем падающие ноты
         for note in self.falling_notes:
             pygame.draw.rect(self.screen, note['color'],
                              (note['x'], note['y'], note['width'], note['height']), 0, 5)
 
-            font = pygame.font.Font(None, 24)
-            text = font.render(note['note_name'], True, TEXT)
+            font = pygame.font.Font(None, FALLING_NOTE_FONT_SIZE)
+            text = font.render(note['note_name'], True, FALLING_NOTE_TEXT_COLOR)
             text_rect = text.get_rect(
                 center=(note['x'] + note['width'] // 2,
                         note['y'] + note['height'] // 2)
             )
             self.screen.blit(text, text_rect)
 
-        # Обновляем отрисовку кнопок (включая новую мелодию)
+        # Рисуем кнопки
         self.start_button.draw(self.screen)
         self.reset_button.draw(self.screen)
-        self.mel_button.draw(self.screen)  # Теперь с обновленным текстом
+        self.mel_button.draw(self.screen)
 
         # Статистика и информация
         font = pygame.font.SysFont(FONT, SIZE_TEXT)
 
-        if self.is_playing or self.score > 0 or self.misses > 0:
-            score_text = font.render(f"Счёт: {self.score}", True, (0, 255, 0))
 
-            # Прогресс: текущая нота / всего нот В ТЕКУЩЕЙ МЕЛОДИИ
-            total_notes = len(self.current_melody_data['notes'])
-            progress_text = font.render(
-                f"Прогресс: {self.current_note_index}/{total_notes}",
-                True, TEXT
-            )
+        score_text = font.render(f"Счёт: {self.score}", True, SCORE_COLOR)
+        misses_text = font.render(f"Промахи: {self.misses}", True, MISSES_COLOR)
 
-            self.screen.blit(score_text, (MODE_TEXT_X + 250, 100))
-            self.screen.blit(progress_text, (MODE_TEXT_X, 100))
+        # Прогресс: текущая нота / всего нот В ТЕКУЩЕЙ МЕЛОДИИ
+        total_notes = len(self.current_melody_data['notes'])
+        progress_text = font.render(
+            f"Прогресс: {self.current_note_index}/{total_notes}",
+            True, TEXT
+        )
 
+        self.screen.blit(score_text, (TEXT_OFFSET_X + 160, TEXT_OFFSET_Y))
+        self.screen.blit(misses_text, (TEXT_OFFSET_X + 280 , TEXT_OFFSET_Y))
+        self.screen.blit(progress_text, (TEXT_OFFSET_X, TEXT_OFFSET_Y))
 
-        instruction = font.render("Нажимайте клавиши когда ноты в зеленой зоне!", True, TEXT)
-        self.screen.blit(instruction, (PIANO_START_X, HEIGHT - 70))
+        # Инструкция
+        instruction = font.render(INSTRUCTION_TEXT, True, TEXT)
+        self.screen.blit(instruction, (PIANO_START_X, INSTRUCTION_POS_Y))
+
         self.draw_mode_game()
 
     def draw_mode_game(self):
         font = pygame.font.SysFont(FONT, SIZE_TEXT)
-        mode_text = font.render(f"Режим игры: ПАДАЮЩИЕ НОТЫ ", True, TEXT)
-        self.screen.blit(mode_text, (MODE_TEXT_X, MODE_TEXT_Y + 30))
-
+        mode_text = font.render(CURRENT_MODE_GAME[1], True, TEXT)
+        self.screen.blit(mode_text, (MODE_TEXT_X, MODE_TEXT_Y + 35))
 
     def draw(self):
         super().draw()

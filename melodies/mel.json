@@ -1,0 +1,218 @@
+[
+  {
+    "name": "Гуси",
+    "flag": 1,
+    "notes": [
+      {
+        "note": "G",
+        "delay": 0
+      },
+      {
+        "note": "F",
+        "delay": 700
+      },
+      {
+        "note": "D",
+        "delay": 700
+      },
+      {
+        "note": "S",
+        "delay": 700
+      },
+      {
+        "note": "H",
+        "delay": 700
+      },
+      {
+        "note": "H",
+        "delay": 1000
+      },
+      {
+        "note": "G",
+        "delay": 700
+      },
+      {
+        "note": "F",
+        "delay": 700
+      },
+      {
+        "note": "D",
+        "delay": 700
+      },
+      {
+        "note": "S",
+        "delay": 700
+      },
+      {
+        "note": "H",
+        "delay": 600
+      },
+      {
+        "note": "H",
+        "delay": 1000
+      },
+      {
+        "note": "G",
+        "delay": 700
+      },
+      {
+        "note": "J",
+        "delay": 700
+      },
+      {
+        "note": "J",
+        "delay": 700
+      },
+      {
+        "note": "G",
+        "delay": 700
+      },
+      {
+        "note": "F",
+        "delay": 700
+      },
+      {
+        "note": "H",
+        "delay": 700
+      },
+      {
+        "note": "H",
+        "delay": 700
+      },
+      {
+        "note": "F",
+        "delay": 700
+      },
+      {
+        "note": "D",
+        "delay": 1000
+      },
+      {
+        "note": "F",
+        "delay": 700
+      },
+      {
+        "note": "G",
+        "delay": 700
+      },
+      {
+        "note": "D",
+        "delay": 700
+      },
+      {
+        "note": "S",
+        "delay": 1000
+      },
+      {
+        "note": "S",
+        "delay": 1000
+      }
+    ]
+  },
+  {
+    "name": "Jingle Bells",
+    "flag": 1,
+    "notes": [
+      {
+        "note": "F",
+        "delay": 0
+      },
+      {
+        "note": "F",
+        "delay": 600
+      },
+      {
+        "note": "F",
+        "delay": 600
+      },
+      {
+        "note": "F",
+        "delay": 1000
+      },
+      {
+        "note": "F",
+        "delay": 600
+      },
+      {
+        "note": "F",
+        "delay": 600
+      },
+      {
+        "note": "F",
+        "delay": 1000
+      },
+      {
+        "note": "H",
+        "delay": 600
+      },
+      {
+        "note": "S",
+        "delay": 600
+      },
+      {
+        "note": "D",
+        "delay": 600
+      },
+      {
+        "note": "F",
+        "delay": 600
+      },
+      {
+        "note": "G",
+        "delay": 1500
+      },
+      {
+        "note": "G",
+        "delay": 600
+      },
+      {
+        "note": "G",
+        "delay": 600
+      },
+      {
+        "note": "G",
+        "delay": 800
+      },
+      {
+        "note": "G",
+        "delay": 500
+      },
+      {
+        "note": "F",
+        "delay": 500
+      },
+      {
+        "note": "F",
+        "delay": 500
+      },
+      {
+        "note": "F",
+        "delay": 500
+      },
+      {
+        "note": "F",
+        "delay": 700
+      },
+      {
+        "note": "D",
+        "delay": 600
+      },
+      {
+        "note": "D",
+        "delay": 600
+      },
+      {
+        "note": "F",
+        "delay": 600
+      },
+      {
+        "note": "D",
+        "delay": 600
+      },
+      {
+        "note": "H",
+        "delay": 900
+      }
+    ]
+  }
+]

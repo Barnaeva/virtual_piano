@@ -19,13 +19,20 @@ class PianoScene:
         )
         self.exit_button = ImageButton(
             EXIT_BUTTON_X, EXIT_BUTTON_Y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT, "ВЫХОД",
-            BACKGROUND, BUTTON,BUTTON_SOUND_PATH
-        )
-        self.mode_button_game = ImageButton(
-            MODE_GAME_BUTTON_X, MODE_GAME_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT, "РЕЖИМ ИГРЫ",
             BACKGROUND, BUTTON, BUTTON_SOUND_PATH
         )
+        self.mode_button_game = ImageButton(
+            MODE_BUTTON_X, MODE_GAME_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT, "РЕЖИМ ИГРЫ",
+            BACKGROUND, BUTTON, BUTTON_SOUND_PATH
+        )
+        self.record_button = ImageButton(  # НОВАЯ КНОПКА
+            RECORD_BUTTON_X, RECORD_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT, "ЗАПИСЬ МЕЛОДИИ",
+            BACKGROUND, BUTTON, BUTTON_SOUND_PATH
+        )
+
         self.need_switch_to_game = False
+        self.need_switch_to_record = False  # Новый флаг для перехода в режим записи
+        self.current_mode_game = "1"  # Текущий режим игры
 
     def load_sounds(self):
         sound_modes = {}
@@ -43,7 +50,6 @@ class PianoScene:
         self.current_mode = "2" if self.current_mode == "1" else "3" if self.current_mode == "2" else "1"
         self.current_sounds = self.sound_modes[self.current_mode]
 
-
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -57,9 +63,12 @@ class PianoScene:
                 return False
 
             if self.mode_button_game.handle_event(event):
+                self.current_mode_game = "2" if self.current_mode_game == "1" else "1"
                 self.need_switch_to_game = True
 
-
+            if self.record_button.handle_event(event):  # НОВАЯ КНОПКА
+                self.current_mode_game = "3"
+                self.need_switch_to_record = True
 
             elif event.type == pygame.KEYDOWN:
                 match event.key:
@@ -97,6 +106,7 @@ class PianoScene:
         self.mode_button.check_hover(pygame.mouse.get_pos())
         self.exit_button.check_hover(pygame.mouse.get_pos())
         self.mode_button_game.check_hover(pygame.mouse.get_pos())
+        self.record_button.check_hover(pygame.mouse.get_pos())  # НОВАЯ КНОПКА
 
     def draw(self):
         self.screen.fill(BACKGROUND)
@@ -113,31 +123,33 @@ class PianoScene:
             pygame.draw.rect(self.screen, color,
                              (x, PIANO_START_Y, KEY_WIDTH, KEY_HEIGHT), 0, 5)
 
+        # Рисуем все кнопки
         self.mode_button.draw(self.screen)
         self.exit_button.draw(self.screen)
         self.mode_button_game.draw(self.screen)
+        self.record_button.draw(self.screen)  # НОВАЯ КНОПКА
 
         font = pygame.font.SysFont(FONT, SIZE_TEXT)
 
+        # Режим звука
         mode_name = CURRENT_MODE.get(self.current_mode, f"Режим {self.current_mode}")
-        mode_text = font.render(f"Режим звука: {mode_name} ", True, TEXT)
-
+        mode_text = font.render(f" {mode_name} ", True, TEXT)
         self.screen.blit(mode_text, (MODE_TEXT_X, MODE_TEXT_Y))
 
-
-
+        # Подписи клавиш
         for i, label in enumerate(KEY_LABELS):
             key_x = PIANO_START_X + i * (KEY_WIDTH + KEY_SPACING) + KEY_TEXT_OFFSET_X
             key_y = PIANO_START_Y + KEY_TEXT_OFFSET_Y
 
             key_text = font.render(label, True, BUTTON)
             self.screen.blit(key_text, (key_x, key_y))
+
         self.draw_mode_game()
 
     def draw_mode_game(self):
         font = pygame.font.SysFont(FONT, SIZE_TEXT)
-        mode_text = font.render(f"Режим игры: СИНТЕЗАТОР ", True, TEXT)
-        self.screen.blit(mode_text, (MODE_TEXT_X, MODE_TEXT_Y + 30))
+        mode_text = font.render(CURRENT_MODE_GAME[0], True, TEXT)
+        self.screen.blit(mode_text, (MODE_TEXT_X, MODE_TEXT_Y + 35))
 
     def run(self):
         self.clock.tick(FPS)
