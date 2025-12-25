@@ -1,41 +1,38 @@
-from datetime import datetime
-from config import *
-from scenes.piano import PianoScene
-from ui.buttons import ImageButton
-from ui.io_operation import *
 import wave
 import numpy as np
-import struct
+from datetime import datetime
+from utils.config import *
+from scenes.piano import PianoScene
+from utils.buttons import ImageButton
+from utils.io_operation import *
 
 
 class MelodyRecorderScene(PianoScene):
-    """Сцена для записи мелодий пользователя"""
-
     def __init__(self, screen, clock):
         super().__init__(screen, clock)
 
-        # Загружаем все мелодии
         self.all_melodies = read_json('melodies/mel.json')
         self.current_melody_index = 0
-        self.list_scroll_offset = 0  # Смещение для прокрутки списка
+        self.list_scroll_offset = 0
 
-        # Текущая выбранная мелодия
         if self.all_melodies:
             self.current_melody_data = self.all_melodies[self.current_melody_index]
         else:
             self.current_melody_data = {'name': 'Нет мелодий', 'flag': 0, 'notes': []}
 
-        # Состояние записи
         self.recording = False
         self.record_start_time = 0
         self.recorded_notes = []
-
         self.record_button.text = "ВЕРНУТЬСЯ"
-
-        # Создаём папку для мелодий
         os.makedirs("melodies", exist_ok=True)
 
-        # Кнопки навигации по списку
+        # Переменные для воспроизведения
+        self.playing = False
+        self.playback_index = 0
+        self.playback_start_time = 0
+        self.current_playback_notes = []
+        self.playback_note_start_time = 0
+
         self.up_button = ImageButton(
             x=MELODY_LIST_X + MELODY_LIST_WIDTH - 40,
             y=MELODY_LIST_Y,
@@ -58,12 +55,8 @@ class MelodyRecorderScene(PianoScene):
             sound_path=BUTTON_SOUND_PATH
         )
 
-        # Основные кнопки управления
-        button_x = RECORD_BUTTON_X
-        button_y_start = RECORD_BUTTON_Y + (BUTTON_HEIGHT + KEY_SPACING) * 2
-
         self.record_control_button = ImageButton(
-            x=button_x, y=button_y_start,
+            x=RECORD_BUTTON_X-BUTTON_WIDTH-KEY_SPACING, y=PIANO_START_Y-50,
             width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
             text="НАЧАТЬ ЗАПИСЬ",
             color=BUTTON, hover_color=KEYS_PIANO,
@@ -71,7 +64,7 @@ class MelodyRecorderScene(PianoScene):
         )
 
         self.save_button = ImageButton(
-            x=button_x, y=button_y_start + (BUTTON_HEIGHT + KEY_SPACING) * 1,
+            x=RECORD_BUTTON_X, y=PIANO_START_Y-50,
             width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
             text="СОХРАНИТЬ",
             color=BUTTON, hover_color=KEYS_PIANO,
@@ -79,7 +72,7 @@ class MelodyRecorderScene(PianoScene):
         )
 
         self.convert_wav_button = ImageButton(
-            x=button_x, y=button_y_start + (BUTTON_HEIGHT + KEY_SPACING) * 2,
+            x=RECORD_BUTTON_X, y=RECORD_BUTTON_Y + (BUTTON_HEIGHT + KEY_SPACING) * 4,
             width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
             text="СОХРАНИТЬ .WAV",
             color=BUTTON, hover_color=KEYS_PIANO,
@@ -87,7 +80,7 @@ class MelodyRecorderScene(PianoScene):
         )
 
         self.play_button = ImageButton(
-            x=button_x, y=button_y_start + (BUTTON_HEIGHT + KEY_SPACING) * 3,
+            x=RECORD_BUTTON_X, y=RECORD_BUTTON_Y + (BUTTON_HEIGHT + KEY_SPACING) * 5,
             width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
             text="ВОСПРОИЗВЕСТИ",
             color=BUTTON, hover_color=KEYS_PIANO,
@@ -95,7 +88,7 @@ class MelodyRecorderScene(PianoScene):
         )
 
         self.del_button = ImageButton(
-            x=button_x, y=button_y_start + (BUTTON_HEIGHT + KEY_SPACING) * 4,
+            x=RECORD_BUTTON_X, y=RECORD_BUTTON_Y + (BUTTON_HEIGHT + KEY_SPACING) * 6,
             width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
             text="УДАЛИТЬ",
             color=(180, 60, 60), hover_color=(220, 80, 80),
@@ -192,7 +185,6 @@ class MelodyRecorderScene(PianoScene):
                 self.list_scroll_offset += 1
 
     def select_melody(self, index):
-        """Выбрать мелодию по индексу"""
         if 0 <= index < len(self.all_melodies):
             self.current_melody_index = index
             self.current_melody_data = self.all_melodies[index]
@@ -200,12 +192,10 @@ class MelodyRecorderScene(PianoScene):
         return False
 
     def select_melody_by_click(self, mouse_pos):
-        """Выбрать мелодию кликом мыши"""
         list_rect = pygame.Rect(MELODY_LIST_X, MELODY_LIST_Y,
                                 MELODY_LIST_WIDTH, MELODY_LIST_HEIGHT)
 
         if list_rect.collidepoint(mouse_pos):
-            # Вычисляем индекс кликнутой мелодии
             rel_y = mouse_pos[1] - MELODY_LIST_Y
             clicked_index = self.list_scroll_offset + (rel_y // MELODY_ITEM_HEIGHT)
 
@@ -216,7 +206,6 @@ class MelodyRecorderScene(PianoScene):
         return False
 
     def start_recording(self):
-        """Начать запись новой мелодии"""
         self.recording = True
         self.record_start_time = pygame.time.get_ticks()
         self.recorded_notes = []
@@ -224,7 +213,6 @@ class MelodyRecorderScene(PianoScene):
         self.record_control_button.text = "ОСТАНОВИТЬ"
 
     def stop_recording(self):
-        """Остановить запись"""
         if self.recording:
             self.recording = False
             self.record_control_button.text = "НАЧАТЬ ЗАПИСЬ"
@@ -232,14 +220,12 @@ class MelodyRecorderScene(PianoScene):
         return False
 
     def toggle_recording(self):
-        """Переключить режим записи"""
         if not self.recording:
             self.start_recording()
         else:
             self.stop_recording()
 
     def record_note(self, note_name):
-        """Записать нажатую ноту с текущим временем"""
         if not self.recording:
             return
 
@@ -256,11 +242,9 @@ class MelodyRecorderScene(PianoScene):
         self.last_note_time = time_since_start
 
     def save_melody(self):
-        """Сохранить записанную мелодию в JSON файл"""
         if not self.recorded_notes:
             return False
 
-        # Преобразуем в формат с относительным временем
         notes_with_delay = []
         prev_time = 0
         for note in self.recorded_notes:
@@ -271,29 +255,21 @@ class MelodyRecorderScene(PianoScene):
             })
             prev_time = note['time']
 
-        # Создаём имя файла с датой
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        timestamp = datetime.now().strftime("%H%M%S")
 
-        # Создаём структуру данных
         melody_data = {
-            'name': f"Моя мелодия {timestamp}",
+            'name': f"{timestamp}",
             'flag': 0,
             'notes': notes_with_delay
         }
-
-        # Сохраняем только в основной файл
         add_mel_json('melodies/mel.json', melody_data)
-
-        # Обновляем список мелодий
         self.all_melodies = read_json('melodies/mel.json')
         if self.all_melodies:
-            # Выбираем последнюю сохраненную мелодию
             self.select_melody(len(self.all_melodies) - 1)
 
         return True
 
     def convert_current_to_wav(self):
-        """Конвертировать текущую мелодию в WAV"""
         if self.all_melodies and self.current_melody_index < len(self.all_melodies):
             melody = self.all_melodies[self.current_melody_index]
             if melody.get('notes'):
@@ -303,44 +279,71 @@ class MelodyRecorderScene(PianoScene):
         else:
             print("Нет выбранной мелодии!")
 
-    def play_selected_melody(self):
-        """Воспроизвести выбранную мелодию"""
+    def start_playback(self):
         if not self.all_melodies or self.current_melody_index >= len(self.all_melodies):
             return
 
         melody = self.all_melodies[self.current_melody_index]
-        notes = melody.get('notes', [])
+        self.current_playback_notes = melody.get('notes', [])
 
-        if not notes:
+        if not self.current_playback_notes:
             return
 
-        # Воспроизводим с задержками
-        for note_data in notes:
-            delay = note_data.get('delay', 0)
-            if delay > 0:
-                pygame.time.delay(delay)
+        self.playing = True
+        self.playback_index = 0
+        self.playback_start_time = pygame.time.get_ticks()
+        self.playback_note_start_time = 0
+        self.play_button.text = "ОСТАНОВИТЬ"
 
-            note_name = note_data.get('note', '')
-            if note_name in self.current_sounds and self.current_sounds[note_name]:
-                self.current_sounds[note_name].play()
+    def stop_playback(self):
+        self.playing = False
+        self.playback_index = 0
+        self.current_playback_notes = []
+        self.play_button.text = "ВОСПРОИЗВЕСТИ"
 
-            # Подсвечиваем клавишу
-            if note_name in KEY_LABELS:
-                index = KEY_LABELS.index(note_name)
-                self.key_glow_time[index] = pygame.time.get_ticks()
+    def toggle_playback(self):
+        if not self.playing:
+            self.start_playback()
+        else:
+            self.stop_playback()
+
+    def update_playback(self):
+        if not self.playing or not self.current_playback_notes:
+            return
+
+        current_time = pygame.time.get_ticks()
+        elapsed = current_time - self.playback_start_time
+
+        if self.playback_index < len(self.current_playback_notes):
+            note_data = self.current_playback_notes[self.playback_index]
+            note_delay = note_data.get('delay', 0)
+
+            if elapsed >= self.playback_note_start_time + note_delay:
+                note_name = note_data.get('note', '')
+                if note_name in self.current_sounds and self.current_sounds[note_name]:
+                    self.current_sounds[note_name].play()
+
+                    if note_name in KEY_LABELS:
+                        index = KEY_LABELS.index(note_name)
+                        self.key_glow_time[index] = current_time
+
+                self.playback_index += 1
+                self.playback_note_start_time = elapsed
+
+                if self.playback_index >= len(self.current_playback_notes):
+                    self.stop_playback()
+        else:
+            self.stop_playback()
 
     def delete_selected_melody(self):
-        """Удалить выбранную мелодию"""
         if not self.all_melodies or self.current_melody_index >= len(self.all_melodies):
             return False
 
         melody_name = self.all_melodies[self.current_melody_index].get('name', '')
 
         if delete_melody('melodies/mel.json', melody_name):
-            # Обновляем список
             self.all_melodies = read_json('melodies/mel.json')
 
-            # Корректируем индекс
             if self.all_melodies:
                 self.current_melody_index = min(self.current_melody_index, len(self.all_melodies) - 1)
                 self.current_melody_data = self.all_melodies[self.current_melody_index]
@@ -353,7 +356,6 @@ class MelodyRecorderScene(PianoScene):
         return False
 
     def handle_events(self):
-        """Обработка событий с добавлением записи"""
         events = pygame.event.get()
 
         for event in events:
@@ -364,11 +366,9 @@ class MelodyRecorderScene(PianoScene):
                 self.need_switch_to_normal = True
                 continue
 
-            # Кнопка mode_button_game теперь ничего не делает
             if self.mode_button_game.handle_event(event):
                 continue
 
-            # Кнопки навигации
             if self.up_button.handle_event(event):
                 self.scroll_list("up")
                 continue
@@ -377,7 +377,6 @@ class MelodyRecorderScene(PianoScene):
                 self.scroll_list("down")
                 continue
 
-            # Основные кнопки управления
             if self.record_control_button.handle_event(event):
                 self.toggle_recording()
                 continue
@@ -391,14 +390,13 @@ class MelodyRecorderScene(PianoScene):
                 continue
 
             if self.play_button.handle_event(event):
-                self.play_selected_melody()
+                self.toggle_playback()
                 continue
 
             if self.del_button.handle_event(event):
                 self.delete_selected_melody()
                 continue
 
-            # Родительские кнопки
             if self.mode_button.handle_event(event):
                 self.switch_mode()
                 continue
@@ -407,25 +405,20 @@ class MelodyRecorderScene(PianoScene):
                 pygame.time.delay(130)
                 return False
 
-            # Клик мыши по списку мелодий
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 self.select_melody_by_click(pygame.mouse.get_pos())
 
-            # Обработка нажатия клавиш пианино
             elif event.type == pygame.KEYDOWN:
-                # Воспроизводим звук
                 note_name = self.get_note_from_key(event.key)
                 if note_name:
                     self.play_note(note_name)
 
-                    # Если включена запись - записываем ноту
                     if self.recording:
                         self.record_note(note_name)
 
         return True
 
     def get_note_from_key(self, key):
-        """Определяет имя ноты по нажатой клавише"""
         note_mapping = {
             pygame.K_s: 'S',
             pygame.K_d: 'D',
@@ -438,20 +431,17 @@ class MelodyRecorderScene(PianoScene):
         return note_mapping.get(key)
 
     def play_note(self, note_name):
-        """Воспроизвести ноту"""
         if note_name in self.current_sounds and self.current_sounds[note_name]:
             self.current_sounds[note_name].play()
 
-        # Подсвечиваем клавишу
         if note_name in KEY_LABELS:
             index = KEY_LABELS.index(note_name)
             self.key_glow_time[index] = pygame.time.get_ticks()
 
     def update(self):
-        """Обновление состояния"""
         super().update()
+        self.update_playback()
 
-        # Обновляем состояние всех кнопок
         mouse_pos = pygame.mouse.get_pos()
         self.up_button.check_hover(mouse_pos)
         self.down_button.check_hover(mouse_pos)
@@ -460,8 +450,6 @@ class MelodyRecorderScene(PianoScene):
             button.check_hover(mouse_pos)
 
     def draw_melody_list(self):
-        """Отрисовка списка мелодий"""
-        # Фон и заголовок
         pygame.draw.rect(self.screen, MELODY_LIST_BG_COLOR,
                          (MELODY_LIST_X, MELODY_LIST_Y,
                           MELODY_LIST_WIDTH, MELODY_LIST_HEIGHT))
@@ -470,7 +458,6 @@ class MelodyRecorderScene(PianoScene):
         title = font.render("СПИСОК МЕЛОДИЙ:", True, TEXT)
         self.screen.blit(title, (MELODY_LIST_X + 10, MELODY_LIST_Y - 30))
 
-        # Рисуем видимые мелодии
         start_idx = self.list_scroll_offset
         end_idx = min(start_idx + MAX_VISIBLE_MELODIES, len(self.all_melodies))
 
@@ -478,43 +465,34 @@ class MelodyRecorderScene(PianoScene):
             melody = self.all_melodies[i]
             y_pos = MELODY_LIST_Y + (i - start_idx) * MELODY_ITEM_HEIGHT
 
-            # Выделение
             if i == self.current_melody_index:
                 pygame.draw.rect(self.screen, MELODY_SELECTED_COLOR,
                                  (MELODY_LIST_X, y_pos, MELODY_LIST_WIDTH - 40, MELODY_ITEM_HEIGHT))
-                text_color = (255, 255, 255)
+                text_color = TEXT
             else:
                 text_color = MELODY_NORMAL_COLOR
 
-            # Название
-            name = melody.get('name', 'Без названия')
+            name = melody.get('name')
             text = font.render(name, True, text_color)
-            self.screen.blit(text, (MELODY_LIST_X + 10, y_pos + 5))
+            self.screen.blit(text, (MELODY_LIST_X + 20, y_pos + 5))
 
-        # Кнопки навигации
         self.up_button.draw(self.screen)
         self.down_button.draw(self.screen)
 
     def draw(self):
-        """Отрисовка сцены"""
         super().draw()
-
-        # Рисуем список мелодий
         self.draw_melody_list()
 
-        # Рисуем все кнопки управления
         for button in self.control_buttons:
             button.draw(self.screen)
 
-        # Текстовая информация
         font = pygame.font.SysFont(FONT, SIZE_TEXT)
 
-        # Информация о записи
         if self.recording:
             record_text = font.render("ЗАПИСЬ...", True, (255, 0, 0))
-            self.screen.blit(record_text, (WIDTH - 150, 20))
+            self.screen.blit(record_text, (PIANO_START_X , PIANO_START_Y + KEY_HEIGHT + KEY_SPACING ))
 
-        # Статистика записи
+
         y_offset = MELODY_LIST_Y + MELODY_LIST_HEIGHT + 40
 
         if self.recorded_notes:
@@ -527,7 +505,6 @@ class MelodyRecorderScene(PianoScene):
             no_notes_text = font.render("Нет записанных нот", True, (200, 200, 200))
             self.screen.blit(no_notes_text, (MELODY_LIST_X, y_offset))
 
-        # Детальная информация о выбранной мелодии
         if self.all_melodies and self.current_melody_index < len(self.all_melodies):
             melody = self.all_melodies[self.current_melody_index]
             note_count = len(melody.get('notes', []))
@@ -535,28 +512,20 @@ class MelodyRecorderScene(PianoScene):
 
             selected_text = font.render(
                 f"Выбрано: {melody.get('name', '')}",
-                True, (200, 200, 100)
+                True, TEXT
             )
 
             info_text1 = font.render(
                 f"Нот: {note_count} | Тип: {melody_type}",
-                True, (180, 180, 255)
+                True, TEXT
             )
 
-            self.screen.blit(selected_text, (MELODY_LIST_X + MELODY_LIST_WIDTH + 20,
-                                             MELODY_LIST_Y + 50))
-            self.screen.blit(info_text1, (MELODY_LIST_X + MELODY_LIST_WIDTH + 20,
-                                          MELODY_LIST_Y + 85))
+            self.screen.blit(selected_text, (RECORD_BUTTON_X -90 ,
+                                             RECORD_BUTTON_Y + (BUTTON_HEIGHT + KEY_SPACING) * 2))
+            self.screen.blit(info_text1, (RECORD_BUTTON_X-90,
+                                          RECORD_BUTTON_Y + (BUTTON_HEIGHT + KEY_SPACING) * 3))
 
-        # Режим игры
         self.draw_mode_game()
-
-        # Инструкция
-        instruction = font.render(
-            "Нажимайте клавиши пианино для записи, кликайте по списку для выбора",
-            True, TEXT
-        )
-        self.screen.blit(instruction, (PIANO_START_X, INSTRUCTION_POS_Y))
 
     def draw_mode_game(self):
         font = pygame.font.SysFont(FONT, SIZE_TEXT)
@@ -564,7 +533,6 @@ class MelodyRecorderScene(PianoScene):
         self.screen.blit(mode_text, (MODE_TEXT_X, MODE_TEXT_Y + 35))
 
     def run(self):
-        """Главный цикл сцены"""
         self.clock.tick(FPS)
 
         if not self.handle_events():

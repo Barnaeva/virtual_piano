@@ -1,5 +1,6 @@
-import pygame
 from core.game import Game
+import sys
+import traceback
 
 def main():
     try:
@@ -7,9 +8,8 @@ def main():
         game.run()
     except Exception as e:
         print(f"Ошибка запуска: {e}")
-        import traceback
         traceback.print_exc()
-        input("Нажмите Enter для выхода...")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()

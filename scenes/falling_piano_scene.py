@@ -1,15 +1,15 @@
-from config import *
+from utils.config import *
 from scenes.piano import PianoScene
-from ui.buttons import ImageButton
-from ui.io_operation import *
+from utils.buttons import ImageButton
+from utils.io_operation import *
 
 
 class FallingPianoScene(PianoScene):
     def __init__(self, screen, clock):
         super().__init__(screen, clock)
 
-        self.play_icon = load_icon("play.png")
-        self.stop_icon = load_icon("stop.png")
+        self.play_icon = load_icon("pic/play.png")
+        self.stop_icon = load_icon("pic/stop.png")
 
         self.falling_notes = []
         self.fall_speed = FALLING_SPEED
@@ -27,8 +27,8 @@ class FallingPianoScene(PianoScene):
         self.melody_start_time = 0
         self.next_note_time = 0
 
-        self.hit_zone_top = PIANO_START_Y
-        self.hit_zone_bottom = PIANO_START_Y + KEY_HEIGHT
+        self.hit_zone_top = PIANO_START_Y + KEY_TEXT_OFFSET_Y -10
+        self.hit_zone_bottom = self.hit_zone_top + FALLING_NOTE_HEIGHT
 
         # Кнопка старт/пауза
         self.start_button = ImageButton(
@@ -236,7 +236,7 @@ class FallingPianoScene(PianoScene):
             PIANO_START_X,
             self.hit_zone_top,
             KEY_COUNT * (KEY_WIDTH + KEY_SPACING) - 5,
-            self.hit_zone_bottom - self.hit_zone_top
+            self.hit_zone_bottom-self.hit_zone_top
         )
 
         # Полупрозрачная зона попадания

@@ -1,5 +1,5 @@
 import pygame
-from config import SIZE_TEXT, FONT
+from utils.config import SIZE_TEXT, FONT
 
 
 class ImageButton:

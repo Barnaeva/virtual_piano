@@ -214,5 +214,625 @@
         "delay": 900
       }
     ]
+  },
+  {
+    "name": "Ёлочка",
+    "flag": 1,
+    "notes": [
+      {
+        "note": "H",
+        "delay": 0
+      },
+      {
+        "note": "F",
+        "delay": 1137
+      },
+      {
+        "note": "F",
+        "delay": 566
+      },
+      {
+        "note": "H",
+        "delay": 526
+      },
+      {
+        "note": "F",
+        "delay": 1028
+      },
+      {
+        "note": "F",
+        "delay": 490
+      },
+      {
+        "note": "H",
+        "delay": 570
+      },
+      {
+        "note": "G",
+        "delay": 507
+      },
+      {
+        "note": "F",
+        "delay": 509
+      },
+      {
+        "note": "D",
+        "delay": 630
+      },
+      {
+        "note": "S",
+        "delay": 616
+      },
+      {
+        "note": "J",
+        "delay": 1773
+      },
+      {
+        "note": "S",
+        "delay": 1253
+      },
+      {
+        "note": "J",
+        "delay": 724
+      },
+      {
+        "note": "H",
+        "delay": 641
+      },
+      {
+        "note": "F",
+        "delay": 1276
+      },
+      {
+        "note": "F",
+        "delay": 646
+      },
+      {
+        "note": "H",
+        "delay": 879
+      },
+      {
+        "note": "G",
+        "delay": 650
+      },
+      {
+        "note": "F",
+        "delay": 600
+      },
+      {
+        "note": "D",
+        "delay": 584
+      },
+      {
+        "note": "S",
+        "delay": 674
+      },
+      {
+        "note": "J",
+        "delay": 2020
+      },
+      {
+        "note": "S",
+        "delay": 1161
+      },
+      {
+        "note": "J",
+        "delay": 681
+      },
+      {
+        "note": "H",
+        "delay": 662
+      },
+      {
+        "note": "F",
+        "delay": 1178
+      },
+      {
+        "note": "F",
+        "delay": 614
+      },
+      {
+        "note": "H",
+        "delay": 583
+      },
+      {
+        "note": "G",
+        "delay": 658
+      },
+      {
+        "note": "F",
+        "delay": 630
+      },
+      {
+        "note": "D",
+        "delay": 579
+      },
+      {
+        "note": "S",
+        "delay": 569
+      }
+    ]
+  },
+  {
+    "name": "Берёза",
+    "flag": 1,
+    "notes": [
+      {
+        "note": "J",
+        "delay": 436
+      },
+      {
+        "note": "J",
+        "delay": 392
+      },
+      {
+        "note": "J",
+        "delay": 492
+      },
+      {
+        "note": "J",
+        "delay": 542
+      },
+      {
+        "note": "H",
+        "delay": 545
+      },
+      {
+        "note": "G",
+        "delay": 934
+      },
+      {
+        "note": "G",
+        "delay": 468
+      },
+      {
+        "note": "F",
+        "delay": 541
+      },
+      {
+        "note": "D",
+        "delay": 1049
+      },
+      {
+        "note": "J",
+        "delay": 1098
+      },
+      {
+        "note": "J",
+        "delay": 464
+      },
+      {
+        "note": "S",
+        "delay": 533
+      },
+      {
+        "note": "J",
+        "delay": 630
+      },
+      {
+        "note": "H",
+        "delay": 904
+      },
+      {
+        "note": "H",
+        "delay": 566
+      },
+      {
+        "note": "G",
+        "delay": 600
+      },
+      {
+        "note": "G",
+        "delay": 532
+      },
+      {
+        "note": "F",
+        "delay": 533
+      },
+      {
+        "note": "D",
+        "delay": 1035
+      },
+      {
+        "note": "F",
+        "delay": 1030
+      },
+      {
+        "note": "G",
+        "delay": 1412
+      },
+      {
+        "note": "H",
+        "delay": 595
+      },
+      {
+        "note": "G",
+        "delay": 1033
+      },
+      {
+        "note": "G",
+        "delay": 547
+      },
+      {
+        "note": "F",
+        "delay": 536
+      },
+      {
+        "note": "D",
+        "delay": 968
+      },
+      {
+        "note": "F",
+        "delay": 925
+      },
+      {
+        "note": "G",
+        "delay": 1436
+      },
+      {
+        "note": "H",
+        "delay": 570
+      },
+      {
+        "note": "G",
+        "delay": 1030
+      },
+      {
+        "note": "G",
+        "delay": 494
+      },
+      {
+        "note": "F",
+        "delay": 598
+      },
+      {
+        "note": "D",
+        "delay": 979
+      }
+    ]
+  },
+  {
+    "name": "Happy BD",
+    "flag": 1,
+    "notes": [
+      {
+        "note": "S",
+        "delay": 640
+      },
+      {
+        "note": "S",
+        "delay": 680
+      },
+      {
+        "note": "D",
+        "delay": 350
+      },
+      {
+        "note": "S",
+        "delay": 660
+      },
+      {
+        "note": "G",
+        "delay": 750
+      },
+      {
+        "note": "F",
+        "delay": 790
+      },
+      {
+        "note": "S",
+        "delay": 1055
+      },
+      {
+        "note": "S",
+        "delay": 790
+      },
+      {
+        "note": "D",
+        "delay": 320
+      },
+      {
+        "note": "S",
+        "delay": 620
+      },
+      {
+        "note": "H",
+        "delay": 675
+      },
+      {
+        "note": "G",
+        "delay": 705
+      },
+      {
+        "note": "S",
+        "delay": 1275
+      },
+      {
+        "note": "S",
+        "delay": 625
+      },
+      {
+        "note": "K",
+        "delay": 400
+      },
+      {
+        "note": "J",
+        "delay": 760
+      },
+      {
+        "note": "G",
+        "delay": 1595
+      },
+      {
+        "note": "G",
+        "delay": 760
+      },
+      {
+        "note": "F",
+        "delay": 760
+      },
+      {
+        "note": "D",
+        "delay": 855
+      },
+      {
+        "note": "K",
+        "delay": 1575
+      },
+      {
+        "note": "K",
+        "delay": 645
+      },
+      {
+        "note": "J",
+        "delay": 770
+      },
+      {
+        "note": "G",
+        "delay": 955
+      },
+      {
+        "note": "H",
+        "delay": 1135
+      },
+      {
+        "note": "G",
+        "delay": 940
+      }
+    ]
+  },
+  {
+    "name": "Белая ночь",
+    "flag": 1,
+    "notes": [
+      {
+        "note": "F",
+        "delay": 100
+      },
+      {
+        "note": "H",
+        "delay": 526
+      },
+      {
+        "note": "K",
+        "delay": 524
+      },
+      {
+        "note": "K",
+        "delay": 447
+      },
+      {
+        "note": "H",
+        "delay": 831
+      },
+      {
+        "note": "F",
+        "delay": 500
+      },
+      {
+        "note": "J",
+        "delay": 554
+      },
+      {
+        "note": "G",
+        "delay": 914
+      },
+      {
+        "note": "D",
+        "delay": 514
+      },
+      {
+        "note": "H",
+        "delay": 614
+      },
+      {
+        "note": "G",
+        "delay": 1062
+      },
+      {
+        "note": "F",
+        "delay": 479
+      },
+      {
+        "note": "F",
+        "delay": 800
+      },
+      {
+        "note": "G",
+        "delay": 503
+      },
+      {
+        "note": "H",
+        "delay": 505
+      },
+      {
+        "note": "H",
+        "delay": 458
+      },
+      {
+        "note": "F",
+        "delay": 936
+      },
+      {
+        "note": "S",
+        "delay": 463
+      },
+      {
+        "note": "G",
+        "delay": 564
+      },
+      {
+        "note": "F",
+        "delay": 1079
+      },
+      {
+        "note": "D",
+        "delay": 458
+      },
+      {
+        "note": "F",
+        "delay": 509
+      }
+    ]
+  },
+  {
+    "name": "024912",
+    "flag": 0,
+    "notes": [
+      {
+        "note": "D",
+        "delay": 1275
+      },
+      {
+        "note": "H",
+        "delay": 1204
+      },
+      {
+        "note": "F",
+        "delay": 1137
+      },
+      {
+        "note": "S",
+        "delay": 1166
+      }
+    ]
+  },
+  {
+    "name": "030956",
+    "flag": 0,
+    "notes": [
+      {
+        "note": "S",
+        "delay": 884
+      },
+      {
+        "note": "G",
+        "delay": 787
+      },
+      {
+        "note": "G",
+        "delay": 391
+      },
+      {
+        "note": "F",
+        "delay": 605
+      },
+      {
+        "note": "F",
+        "delay": 401
+      },
+      {
+        "note": "D",
+        "delay": 708
+      },
+      {
+        "note": "D",
+        "delay": 366
+      },
+      {
+        "note": "D",
+        "delay": 1355
+      },
+      {
+        "note": "F",
+        "delay": 371
+      },
+      {
+        "note": "G",
+        "delay": 709
+      },
+      {
+        "note": "H",
+        "delay": 389
+      },
+      {
+        "note": "H",
+        "delay": 1094
+      },
+      {
+        "note": "G",
+        "delay": 409
+      },
+      {
+        "note": "G",
+        "delay": 480
+      },
+      {
+        "note": "F",
+        "delay": 398
+      },
+      {
+        "note": "F",
+        "delay": 694
+      },
+      {
+        "note": "H",
+        "delay": 1984
+      },
+      {
+        "note": "H",
+        "delay": 365
+      },
+      {
+        "note": "G",
+        "delay": 695
+      },
+      {
+        "note": "G",
+        "delay": 401
+      },
+      {
+        "note": "F",
+        "delay": 621
+      },
+      {
+        "note": "F",
+        "delay": 335
+      },
+      {
+        "note": "S",
+        "delay": 990
+      },
+      {
+        "note": "G",
+        "delay": 753
+      },
+      {
+        "note": "G",
+        "delay": 427
+      },
+      {
+        "note": "F",
+        "delay": 341
+      },
+      {
+        "note": "D",
+        "delay": 410
+      },
+      {
+        "note": "D",
+        "delay": 1137
+      }
+    ]
   }
 ]

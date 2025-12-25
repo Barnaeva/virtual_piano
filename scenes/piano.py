@@ -1,6 +1,6 @@
 import pygame
-from config import *
-from ui.buttons import ImageButton
+from utils.config import *
+from utils.buttons import ImageButton
 
 
 class PianoScene:

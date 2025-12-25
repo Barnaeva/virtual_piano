@@ -134,7 +134,7 @@ SOUND_SETTINGS = {
     'buffer': 512
 }
 NUM_CHANNELS = 16
-BUTTON_SOUND_PATH = "sounds/click.wav"
+BUTTON_SOUND_PATH = "../virtual_piano/sounds/click.wav"
 
 # Звуковые режимы
 SOUND_PATHS = {
@@ -179,4 +179,11 @@ SIZE_TEXT = 23
 
 # =============== ЗАПИСЬ WAV ===============
 DEFAULT_WAV_FILENAME = "my_melody.wav"
-WAV_EXPORT_PATH = "melodies/"
+WAV_EXPORT_PATH = "../virtual_piano/melodies/"
+
+# Координаты для лицензионного окна
+LICENSE_INPUT_X = WIDTH // 2 - 200
+LICENSE_INPUT_Y = 220
+LICENSE_INPUT_WIDTH = 400
+LICENSE_INPUT_HEIGHT = 60
+CODE="c6eaf20a01893966ad8466d523a9acbe655af849b802fef67abfca1db04af1df"
